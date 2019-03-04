@@ -1,3 +1,7 @@
 mysql-connector-python
 mysqlclient
 SQLAlchemy
+subprocess
+json
+threading
+time
