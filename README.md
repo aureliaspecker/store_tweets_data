@@ -1,8 +1,24 @@
+*Note: this repository is still a work in progress*
+
 # Store Tweets
 
 This repo contains a collection of information, code snippets and learnings around storing Tweet data. 
 
-## Initial Learnings
+## Getting Started
+
+### Authentication
+
+Use `sample/credentials_2_example.txt` and `sample/credentials_example.txt` to create two new files (add these to your `.gitignore` file: `credentials_2.txt` and `credentials.txt`. 
+
+Save these two files alongside `run.py` (one level above the `sample` directory) and replace `{INSERT HERE}` with your API and database credentials. 
+
+### Run This Application
+
+In your command line, run `python run.py`. The first time you run this application, it will generate a database and tables for you. After that, it will simply update those tables.
+
+If you want to run analysis on the Tweets stored in your database, run `python run_analysis.py`. For now, you still need to replace the Tweet ID with a Tweet ID that is stored in your database. I will develop this further.
+
+## Some Learnings
 
 ### Relational VS Non-relational Databases
 
