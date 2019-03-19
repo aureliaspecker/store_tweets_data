@@ -1,35 +1,25 @@
 from stream import Stream
+from services.get_tweet import Tweet
+from services.get_user import User
 import time
+from models.db_base import Base, get_db_sessionmaker
+from services.credentials_service import CredentialsService
 
 def main():
     
-    #Read in user detail
-    credentials = read_credentials()
+    """Read in user detail"""
+    credentials = CredentialsService().from_file("credentials.txt")
 
-    #Initialise stream
-    stream = Stream(**credentials)
+    db_sessionmaker = get_db_sessionmaker(credentials)
 
-    #Where the business happens
-    while True:
-        new_data = stream.get_engagement_data()
-        if new_data is None:
-            print("No new data")
-        else:
-            print("Number of new data: {}".format(len(new_data)))
-            print(new_data)
-        time.sleep(5)
+    """Initialise stream"""
+    stream = Stream(db_sessionmaker, **credentials)
 
+    """Get Tweet and store in DB"""
+    # Yet to do
 
-def read_credentials():
-    """Read in user credentials (bearer token, account name and stream name) and returns as dictionnary"""
-
-    with open("credentials.txt", "r") as file: 
-        bearer_token = file.readline().split()[2]
-        account_name = file.readline().split()[2] 
-        stream_name = file.readline().split()[2] 
-    
-    credentials = {"bearer_token":bearer_token, "account_name":account_name, "stream_name":stream_name}
-    return credentials
+    """Get User and store in DB"""
+    # Yet to do
 
 if __name__ == "__main__":
     main()

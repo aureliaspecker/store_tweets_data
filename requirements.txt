@@ -1,7 +1,8 @@
 mysql-connector-python
 mysqlclient
 SQLAlchemy
-subprocess
-json
-threading
-time
+python-dateutil
+requests
+requests_oauthlib
+matplotlib
+numpy
