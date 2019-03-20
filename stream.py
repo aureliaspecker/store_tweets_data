@@ -1,5 +1,5 @@
-import subprocess
 import json
+import requests
 from dateutil import parser 
 from models.tweet_engagement import TweetEngagement, TimeSeries
 
@@ -14,45 +14,43 @@ def safe_get_value(dictionary, *keys):
 class Stream: 
 
     def __init__(self, db_sessionmaker, **kwargs):
-        """Initialise stream connection with bearer token, account name and stream (prod, dev)"""
+        """Initialise stream connection with bearer token, account name and stream (prod, dev, etc.)"""
 
         """Unpack user credentials from dictionary"""
         token = kwargs.get("bearer_token")
         account_name = kwargs.get("account_name")
         stream_name = kwargs.get("stream_name")
-
-        """Run curl command"""
-        curl_command = ['curl','-H','Authorization:Bearer {}'.format(token), '-H', 'content-type:application/json', '-X', 'GET', 'https://data-api.twitter.com/stream/insightstrack/accounts/{}/publishers/twitter/{}.json?backfillMinutes=2'.format(account_name, stream_name)]
-        self.curl_process = subprocess.Popen(curl_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True) 
         
+        sess = requests.Session()
+        sess.trust_env = False
+        sess.headers.update({'Authorization': 'Bearer {}'.format(token), 'content-type':'application/json'})
+        self.result = sess.get('https://data-api.twitter.com/stream/insightstrack/accounts/{0}/publishers/twitter/{1}.json?backfillMinutes=2'.format(account_name, stream_name), stream=True)
+
         while True: 
             self.read_engagement(db_sessionmaker)
-
 
     def read_engagement(self, db_sessionmaker):
         """Monitor stream and store engagement data"""
 
         session = db_sessionmaker()
-        line = self.curl_process.stdout.readline()
-        print("Read line from curl: {0}".format(line))
-        if line is not None and line != '' and line[0] == '{':
-            try:
-               
+        line = self.result
+        
+        print("Read line from curl: {}".format(line))
+
+        for line in self.result.iter_lines():
+            if line:
                 time_series = self.extract_time_series(line)
                 session.add(time_series)
 
                 tweet_engagement = self.extract_tweet_engagement(line)
                 existing_engagement = session.query(TweetEngagement).filter_by(tweet_id=tweet_engagement.tweet_id).first()
+                
                 if(existing_engagement != None):
                     print(session.merge(tweet_engagement))
                 else:
                    print(session.add(tweet_engagement))
                 
                 session.commit()
-            
-            except Exception as e:
-                print("Error adding to database: {0} {1}".format(type(e).__name__, e))
-                pass
 
     def extract_tweet_engagement(self, line): 
         eng_data = json.loads(line)
