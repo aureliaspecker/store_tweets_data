@@ -8,12 +8,12 @@ from services.credentials_service import CredentialsService
 def main():
     
     """Read in user detail"""
-    credentials = CredentialsService().from_file("credentials.txt")
+    credentials = CredentialsService().from_yaml_file("credentials.yml")
 
-    db_sessionmaker = get_db_sessionmaker(credentials)
+    db_sessionmaker = get_db_sessionmaker(credentials.local_db)
 
     """Initialise stream"""
-    stream = Stream(db_sessionmaker, **credentials)
+    stream = Stream(db_sessionmaker, credentials.twitter_api)
 
     """Get Tweet and store in DB"""
     # Yet to do

@@ -1,22 +1,22 @@
 import requests
 from requests_oauthlib import OAuth1
 
-class User: 
+class UserService: 
     
-    def __init__(self):
+    def __init__(self, twitter_credentials):
+        self.twitter_credentials = twitter_credentials
     
-        with open("credentials_2.txt", "r") as file_2: 
-            consumer_key = file_2.readline().split()[2]
-            consumer_secret = file_2.readline().split()[2] 
-            token = file_2.readline().split()[2] 
-            token_secret = file_2.readline().split()[2]
+    def get_user(self, user_id):
 
-        parameters = {'user_id':'1062705508400971776'}
+        parameters = {'user_id':'{}'.format(user_id)}
         headers = {'content-type': 'application/json'}
-        auth = OAuth1(consumer_key, consumer_secret, token, token_secret)
+        auth = OAuth1(
+            self.twitter_credentials.consumer_key, 
+            self.twitter_credentials.consumer_secret, 
+            self.twitter_credentials.token, 
+            self.twitter_credentials.token_secret
+        )
 
-        r = requests.get('https://api.twitter.com/1.1/users/show.json', params=parameters, auth=auth, headers=headers)
+        result = requests.get('https://api.twitter.com/1.1/users/show.json', params=parameters, auth=auth, headers=headers)
 
-        print(r.text)
-
-User()
+        return result.json()

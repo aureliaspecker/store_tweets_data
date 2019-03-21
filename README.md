@@ -8,9 +8,12 @@ This repo contains a collection of information, code snippets and learnings arou
 
 ### Authentication
 
-Use `sample/credentials_2_example.txt` and `sample/credentials_example.txt` to create two new files (add these to your `.gitignore` file: `credentials_2.txt` and `credentials.txt`. 
+Use `sample/credentials_example.yml` to create a new file where you can store your credentials: 
+* Rename the file `credentials.yml` 
+* Save it alongside `run.py` (one level above the `sample` directory)
+* Replace `INSERT-HERE` with your API and database credentials
 
-Save these two files alongside `run.py` (one level above the `sample` directory) and replace `{INSERT HERE}` with your API and database credentials. 
+You're now ready to run the application
 
 ### Run This Application
 

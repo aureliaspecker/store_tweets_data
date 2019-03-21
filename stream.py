@@ -13,13 +13,12 @@ def safe_get_value(dictionary, *keys):
 
 class Stream: 
 
-    def __init__(self, db_sessionmaker, **kwargs):
+    def __init__(self, db_sessionmaker, twitter_credentials):
         """Initialise stream connection with bearer token, account name and stream (prod, dev, etc.)"""
 
-        """Unpack user credentials from dictionary"""
-        token = kwargs.get("bearer_token")
-        account_name = kwargs.get("account_name")
-        stream_name = kwargs.get("stream_name")
+        token = twitter_credentials.bearer_token
+        account_name = twitter_credentials.account_name
+        stream_name = twitter_credentials.stream_name
         
         sess = requests.Session()
         sess.trust_env = False

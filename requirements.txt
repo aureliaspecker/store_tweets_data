@@ -6,3 +6,5 @@ requests
 requests_oauthlib
 matplotlib
 numpy
+PyYAML
+easydict
