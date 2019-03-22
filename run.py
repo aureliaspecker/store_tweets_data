@@ -1,6 +1,6 @@
 from stream import Stream
-from services.get_tweet import Tweet
-from services.get_user import User
+from services.get_tweet import TweetService
+from services.get_user import UserService
 import time
 from models.db_base import Base, get_db_sessionmaker
 from services.credentials_service import CredentialsService
